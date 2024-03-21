@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIBIL Details Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .tabs {
+    width: 30%;
+    border-right: 1px solid #ccc;
+  }
+  .tabs button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+  .tabs button.active {
+    background-color: #ccc;
+  }
+  .details {
+    width: 68%;
+    padding: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tablinks" onclick="openTab(event, 'Applicant')">Applicant</button>
+    <button class="tablinks" onclick="openTab(event, 'CoApplicant')">Co-applicant</button>
+  </div>
+  <div class="details">
+    <div id="Applicant" class="tabcontent">
+      <h3>Applicant CIBIL Details</h3>
+      <table id="applicantTable">
+        <tr>
+          <th>Sr No</th>
+          <th>Institution Name</th>
+          <th>Loan Type</th>
+          <th>Installment Amount</th>
+          <th>POS</th>
+          <th>Bank Type</th>
+          <th>Considered for Obligation</th>
+          <th></th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="CoApplicant" class="tabcontent hidden">
+      <h3>Co-applicant CIBIL Details</h3>
+      <table id="coApplicantTable">
+        <tr>
+          <th>Sr No</th>
+          <th>Institution Name</th>
+          <th>Loan Type</th>
+          <th>Installment Amount</th>
+          <th>POS</th>
+          <th>Bank Type</th>
+          <th>Considered for Obligation</th>
+          <th></th>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].classList.add('hidden');
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove('active');
+    }
+    document.getElementById(tabName).classList.remove('hidden');
+    evt.currentTarget.classList.add('active');
+  }
+
+  // Dummy data for Applicant and Co-Applicant
+  var applicantData = [
+    [1, 'Bajaj Housing Finance', 'Auto Loan', 15500, 0, 'External', 'No'],
+    [2, 'PHFL', 'Home Loan', 25000, 150000, 'Internal', 'Yes'],
+    [3, 'Bajaj finserv', 'Business Loan', 7500, 350000, 'External', 'Yes']
+  ];
+
+  var coApplicantData = [
+    [1, 'Some Institution', 'Personal Loan', 10000, 50000, 'External', 'Yes'],
+    [2, 'Another Institution', 'Education Loan', 8000, 0, 'Internal', 'No']
+  ];
+
+  // Populate tables with data
+  function populateTable(tableId, data) {
+    var table = document.getElementById(tableId);
+    data.forEach(function(rowData) {
+      var row = table.insertRow();
+      rowData.forEach(function(cellData) {
+        var cell = row.insertCell();
+        cell.appendChild(document.createTextNode(cellData));
+      });
+      var viewMoreButton = document.createElement('button');
+      viewMoreButton.innerHTML = 'View More';
+      viewMoreButton.addEventListener('click', function() {
+        if (tableId === 'applicantTable') {
+          viewMore(rowData, 'applicant');
+        } else if (tableId === 'coApplicantTable') {
+          viewMore(rowData, 'coApplicant');
+        }
+      });
+      row.insertCell().appendChild(viewMoreButton);
+    });
+  }
+
+  // View more functionality
+  function viewMore(rowData, type) {
+    var detailFields;
+    if (type === 'applicant') {
+      detailFields = [
+        ['Finnone Request Field', 'Type', 'Data'],
+        ['liabilityType', 'mandatory', 'Loan'],
+        ['loanType', 'mandatory', ''],
+        ['loanCategory', 'optional', ''],
+        ['institutionName', 'optional', ''],
+        ['currentBalance', 'optional', ''],
+        ['emiStartDate', 'object', 'mandatory'],
+        ['installmentFrequency', 'mandatory', ''],
+        ['installmentAmount', 'mandatory', ''],
+        ['assessmentRateMargin', 'optional', ''],
+        ['assessmentBasedInstallmentAmount', 'optional', ''],
+        ['balanceTenureMonths', 'optional', ''],
+        ['salaryFlag', 'optional', ''],
+        ['jointLiabilty', 'optional', ''],
+        ['accountNumber', 'optional', ''],
+        ['sanctionedAmount', 'optional', ''],
+        ['noOfDefaults', 'optional', ''],
+        ['considerForObligation', 'optional', ''],
+        ['isBalanceTransfer', 'optional', ''],
+        ['rateOfInterest', 'optional', ''],
+        ['endUseOfLoan', 'optional', ''],
+        ['closureAmount', 'optional', ''],
+        ['securityGiven', 'optional', ''],
+        ['description', 'optional', ''],
+        ['bankType', 'mandatory', ''],
+        ['referenceHostSystem', 'mandatory', ''],
+        ['loanClosureDate', 'optional', ''],
+        ['sourceSystem', 'optional', ''],
+        ['mob', 'optional', ''],
+        ['topUpOption', 'optional', ''],
+        ['reason', 'optional', ''],
+        ['reasonName', 'mandatory', ''],
+        ['otherDesc', 'optional', ''],
+        ['comments', 'optional', ''],
+        ['integrated', 'optional', ''],
+        ['minimumDue', 'optional', '']
+      ];
+    } else if (type === 'coApplicant') {
+      detailFields = [
+        ['Finnone Request Field', 'Type', 'Data'],
+        ['coLiabilityType', 'mandatory', 'Loan'],
+        ['coLoanType', 'mandatory', ''],
+        ['coLoanCategory', 'optional', ''],
+        ['coInstitutionName', 'optional', ''],
+        ['coCurrentBalance', 'optional', ''],
+        ['coEmiStartDate', 'object', 'mandatory'],
+        ['coInstallmentFrequency', 'mandatory', ''],
+        ['coInstallmentAmount', 'mandatory', ''],
+        ['coAssessmentRateMargin', 'optional', ''],
+        ['coAssessmentBasedInstallmentAmount', 'optional', ''],
+        ['coBalanceTenureMonths', 'optional', ''],
+        ['coSalaryFlag', 'optional', ''],
+        ['coJointLiabilty', 'optional', ''],
+        ['coAccountNumber', 'optional', ''],
+        ['coSanctionedAmount', 'optional', ''],
+        ['coNoOfDefaults', 'optional', ''],
+        ['coConsiderForObligation', 'optional', ''],
+        ['coIsBalanceTransfer', 'optional', ''],
+        ['coRateOfInterest', 'optional', ''],
+        ['coEndUseOfLoan', 'optional', ''],
+        ['coClosureAmount', 'optional', ''],
+        ['coSecurityGiven', 'optional', ''],
+        ['coDescription', 'optional', ''],
+        ['coBankType', 'mandatory', ''],
+        ['coReferenceHostSystem', 'mandatory', ''],
+        ['coLoanClosureDate', 'optional', ''],
+        ['coSourceSystem', 'optional', ''],
+        ['coMob', 'optional', ''],
+        ['coTopUpOption', 'optional', ''],
+        ['coReason', 'optional', ''],
+        ['coReasonName', 'mandatory', ''],
+        ['coOtherDesc', 'optional', ''],
+        ['coComments', 'optional', ''],
+        ['coIntegrated', 'optional', ''],
+        ['coMinimumDue', 'optional', '']
+      ];
+    }
+
+    // Create a new vertical table
+    var detailTable = document.createElement('table');
+    detailTable.classList.add('detail-table');
+
+    // Populate the vertical table with data
+    detailFields.forEach(function(field) {
+      var row = detailTable.insertRow();
+      var labelCell = row.insertCell(0);
+      labelCell.textContent = field[0];
+      var valueCell = row.insertCell(1);
+      if (field[1] === 'mandatory') {
+        valueCell.textContent = rowData[field[0]] || 'N/A';
+      } else {
+        valueCell.textContent = rowData[field[0]] || '';
+      }
+    });
+
+    // Clear any existing detail table
+    var existingDetailTable = document.querySelector('.detail-table');
+    if (existingDetailTable) {
+      existingDetailTable.parentNode.removeChild(existingDetailTable);
+    }
+
+    // Append new detail table
+    document.querySelector('.details').appendChild(detailTable);
+  }
+
+  // Initialize the tables
+  populateTable('applicantTable', applicantData);
+  populateTable('coApplicantTable', coApplicantData);
+
+  // Show default tab on page load
+  document.querySelector('.tablinks').click();
+</script>
+
+</body>
+</html>
